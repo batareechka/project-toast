@@ -1,9 +1,29 @@
 import React from 'react';
 
+import { ToastContext } from '../ToastProvider/ToastProvider';
+
 import Toast from '../Toast';
 import styles from './ToastShelf.module.css';
 
 function ToastShelf({ toasts, handleDismiss }) {
+  const { dismissAllToasts } = React.useContext(ToastContext);
+
+  React.useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === 'Escape') {
+        dismissAllToasts();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+    // Note: this creates a "closure effect" with toasts, 
+    //       which works fine if the toasts are remove in Provider
+  }, []);
+
   return (
     <ol className={styles.wrapper}>
       {toasts.map(({ id, variant, message }) => {
