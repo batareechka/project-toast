@@ -5,21 +5,15 @@ import { ToastContext } from '../ToastProvider/ToastProvider';
 import Toast from '../Toast';
 import styles from './ToastShelf.module.css';
 
+import useEscapeKey from '../../hooks/use-escape-key';
+
 function ToastShelf({ toasts, handleDismiss }) {
   const { dismissAllToasts } = React.useContext(ToastContext);
 
   React.useEffect(() => {
-    function handleEscape(event) {
-      if (event.key === 'Escape') {
-        dismissAllToasts();
-      }
-    }
-
-    document.addEventListener('keydown', handleEscape);
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
+    useEscapeKey(() => {
+      dismissAllToasts();
+    });
     // Note: this creates a "closure effect" with toasts,
     //       which works fine if the toasts are remove in Provider
   }, []);
