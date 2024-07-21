@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Button from '../Button';
-import Toast from '../Toast/Toast';
+import ToastShelf from '../ToastShelf/ToastShelf';
 
 import styles from './ToastPlayground.module.css';
 
@@ -10,10 +10,32 @@ const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
-  const [isShown, setIsShown] = React.useState(false);
 
-  function dismissToast() {
-    setIsShown(false);
+  const [toastMessages, setToastMessages] = React.useState([]);
+
+  function dismissToast(id) {
+    if (!id) {
+      throw new Error('dismissToast requires an id');
+    }
+
+    const updatedToasts = toastMessages.filter((toast) => toast.id !== id);
+    setToastMessages(updatedToasts);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const newToast = {
+      id: crypto.randomUUID(),
+      message,
+      variant,
+    };
+
+    setToastMessages([...toastMessages, newToast]);
+
+    // cleanup
+    setMessage('');
+    setVariant(VARIANT_OPTIONS[0]);
   }
 
   return (
@@ -23,13 +45,14 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {isShown && (
-        <Toast variant={variant} handleDismiss={dismissToast}>
-          {message}
-        </Toast>
+      {toastMessages.length > 0 && (
+        <ToastShelf
+          toastMessages={toastMessages}
+          handleDismiss={dismissToast}
+        />
       )}
 
-      <div className={styles.controlsWrapper}>
+      <form className={styles.controlsWrapper} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -79,16 +102,10 @@ function ToastPlayground() {
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button
-              onClick={() => {
-                setIsShown(true);
-              }}
-            >
-              Pop Toast!
-            </Button>
+            <Button>Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
