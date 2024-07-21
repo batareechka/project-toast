@@ -13,13 +13,12 @@ function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
 
-  const { toastMessages, dismissToast, addToast } =
-    React.useContext(ToastContext);
+  const { toasts, createToast, dismissToast } = React.useContext(ToastContext);
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    addToast(message, variant);
+    createToast(message, variant);
 
     // cleanup
     setMessage('');
@@ -33,11 +32,8 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {toastMessages.length && (
-        <ToastShelf
-          toastMessages={toastMessages}
-          handleDismiss={dismissToast}
-        />
+      {toasts.length && (
+        <ToastShelf toasts={toasts} handleDismiss={dismissToast} />
       )}
 
       <form className={styles.controlsWrapper} onSubmit={handleSubmit}>
