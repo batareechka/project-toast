@@ -20,12 +20,18 @@ function ToastShelf({ toasts, handleDismiss }) {
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-    // Note: this creates a "closure effect" with toasts, 
+    // Note: this creates a "closure effect" with toasts,
     //       which works fine if the toasts are remove in Provider
   }, []);
 
   return (
-    <ol className={styles.wrapper}>
+    <ol
+      className={styles.wrapper}
+      // FIXME: https://dequeuniversity.com/rules/axe/4.9/aria-allowed-role?application=axe-linter
+      role="region"
+      aria-live="polite"
+      aria-label="Notification"
+    >
       {toasts.map(({ id, variant, message }) => {
         return (
           <li className={styles.toastWrapper} key={id}>
