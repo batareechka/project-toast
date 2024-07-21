@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ToastContext } from '../ToastProvider/ToastProvider';
+
 import Button from '../Button';
 import ToastShelf from '../ToastShelf/ToastShelf';
 
@@ -11,27 +13,13 @@ function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
 
-  const [toastMessages, setToastMessages] = React.useState([]);
-
-  function dismissToast(id) {
-    if (!id) {
-      throw new Error('dismissToast requires an id');
-    }
-
-    const updatedToasts = toastMessages.filter((toast) => toast.id !== id);
-    setToastMessages(updatedToasts);
-  }
+  const { toastMessages, dismissToast, addToast } =
+    React.useContext(ToastContext);
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const newToast = {
-      id: crypto.randomUUID(),
-      message,
-      variant,
-    };
-
-    setToastMessages([...toastMessages, newToast]);
+    addToast(message, variant);
 
     // cleanup
     setMessage('');
@@ -45,7 +33,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {toastMessages.length > 0 && (
+      {toastMessages.length && (
         <ToastShelf
           toastMessages={toastMessages}
           handleDismiss={dismissToast}
@@ -64,6 +52,7 @@ function ToastPlayground() {
           <div className={styles.inputWrapper}>
             <textarea
               id="message"
+              required
               className={styles.messageInput}
               value={message}
               onChange={(event) => {
