@@ -19,23 +19,24 @@ function ToastShelf({ toasts, handleDismiss }) {
   }, []);
 
   return (
-    <ol
+    <div
       className={styles.wrapper}
-      // FIXME: https://dequeuniversity.com/rules/axe/4.9/aria-allowed-role?application=axe-linter
       role="region"
       aria-live="polite"
       aria-label="Notification"
     >
-      {toasts.map(({ id, variant, message }) => {
-        return (
-          <li className={styles.toastWrapper} key={id}>
-            <Toast id={id} variant={variant} handleDismiss={handleDismiss}>
-              {message}
-            </Toast>
-          </li>
-        );
-      })}
-    </ol>
+      <ol className={styles.toastList} role="list">
+        {toasts.map(({ id, variant, message }) => {
+          return (
+            <li className={styles.toastWrapper} key={id}>
+              <Toast id={id} variant={variant} handleDismiss={handleDismiss}>
+                {message}
+              </Toast>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 

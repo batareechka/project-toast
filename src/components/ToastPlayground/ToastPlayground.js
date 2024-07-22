@@ -32,7 +32,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {toasts.length && (
+      {toasts.length > 0 && (
         <ToastShelf toasts={toasts} handleDismiss={dismissToast} />
       )}
 
@@ -60,15 +60,17 @@ function ToastPlayground() {
 
         <div className={styles.row}>
           <div className={styles.label}>Variant</div>
-          {VARIANT_OPTIONS.map((option, index) => {
+          {VARIANT_OPTIONS.map((option) => {
+            const id = `variant-${option}`;
+
             return (
               <div
-                key={index}
+                key={id}
                 className={`${styles.inputWrapper} ${styles.radioWrapper}`}
               >
-                <label htmlFor={`variant-${option}`}>
+                <label htmlFor={id}>
                   <input
-                    id={`variant-${option}`}
+                    id={id}
                     type="radio"
                     name="variant"
                     value={option}

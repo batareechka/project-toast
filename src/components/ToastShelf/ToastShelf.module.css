@@ -8,6 +8,9 @@
   position: fixed;
   right: 0;
   bottom: 0;
+}
+
+.toastList {
   display: flex;
   flex-direction: column;
   gap: 16px;
